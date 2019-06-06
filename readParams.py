@@ -41,5 +41,5 @@ class params:
     def initParams(self):
         self.gR=2*self.gc
         self.gammaR=1.5*self.gammaC
-        #######
+        ################
 

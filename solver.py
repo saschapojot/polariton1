@@ -23,9 +23,11 @@ class solver:
         self.paramsR = _parameterReduced
         self.wv = waveFunction(_parameterReduced)
 
+
         self.nR = reservoir(_parameterReduced)
         self.N = _parameterReduced.gridNum
         self.M = _parameterReduced.timeSteps
+        self.recordWv2=np.array((self.M,self.N,self.N))
 
         self.deltaT = 1 / _parameterReduced.fractionTime
         self.wv.psiSpace += np.sqrt(self.paramsR.p0Reduced * self.deltaT) / self.paramsR.gridNum ** 2
@@ -79,6 +81,12 @@ class solver:
             self.wv.phiWavevector = np.multiply(self.wv.phiWavevector, self.incrPhiWavevector)
             self.wv.psiSpace = np.fft.ifftshift(np.fft.ifft2(self.wv.phiWavevector))
             self.wv.psiSpace = np.multiply(self.wv.psiSpace, expf)
+           # self.recordWv2[m,]=np.absolute(self.wv.psiSpace)**2
+            nTmp=np.absolute(self.wv.psiSpace)**2
+            outFileName=str(m)+'.png'
+            plt.imshow(nTmp)
+            plt.savefig(outFileName)
+
 
 
 
@@ -90,6 +98,6 @@ class solveAndPrint:
         solution = solver(parsReduced)
         solution.evolve()
         psiSpaceNorm2=np.absolute(solution.wv.psiSpace)**2
-        plt.imshow(psiSpaceNorm2)
-        plt.show()
+        #plt.imshow(psiSpaceNorm2)
+        #plt.show()
 

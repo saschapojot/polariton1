@@ -27,11 +27,17 @@ class solver:
         self.nR = reservoir(_parameterReduced)
         self.N = _parameterReduced.gridNum
         self.M = _parameterReduced.timeSteps
-        self.recordWv2=np.array((self.M,self.N,self.N))
+        #self.recordWv2=np.array((self.M,self.N,self.N))
 
         self.deltaT = 1 / _parameterReduced.fractionTime
         self.wv.psiSpace += np.sqrt(self.paramsR.p0Reduced * self.deltaT) / self.paramsR.gridNum ** 2
-
+        #outMatName='1.txt'
+        #print(self.wv.psiSpace)
+        #z=np.absolute(self.wv.psiSpace)
+        #print(z.max())
+        #with open(outMatName,'wb') as f:
+         #   for line in np.absolute(self.wv.psiSpace):
+          #      np.savetxt(f,line,fmt='%.4f')
         #########
         self.U = np.zeros((self.N, self.N), dtype=complex)
         self.P = np.zeros((self.N, self.N), dtype=complex)
@@ -54,7 +60,7 @@ class solver:
 
     def evolve(self):
         #print("Enter evolve()")
-        for m in range(0, self.M):
+        for m in range(1, self.M+1):
             ##update nR
             R = np.zeros((self.N, self.N), dtype=complex)
             R -= self.paramsR.beta + self.paramsR.eta * np.absolute(self.wv.psiSpace) ** 2
@@ -82,10 +88,26 @@ class solver:
             self.wv.psiSpace = np.fft.ifftshift(np.fft.ifft2(self.wv.phiWavevector))
             self.wv.psiSpace = np.multiply(self.wv.psiSpace, expf)
            # self.recordWv2[m,]=np.absolute(self.wv.psiSpace)**2
-            nTmp=np.absolute(self.wv.psiSpace)**2
-            outFileName=str(m)+'.png'
-            plt.imshow(nTmp)
+            #save space
+            spTmp=np.absolute(self.wv.psiSpace)**2
+            outFileName='space'+str(m)+'.png'
+
+
+
+            imSp=plt.imshow(spTmp,cmap='jet',interpolation='bilinear',extent=(-self.N/2+1,self.N/2,-self.N/2+1,self.N/2))
+            plt.colorbar(imSp)
+            plt.title('X Space Density at Step = '+str(m))
             plt.savefig(outFileName)
+            plt.clf()
+
+            #save wavevector
+            wvkTmp=np.absolute(self.wv.phiWavevector)**2
+            ofNamephi='wavevector'+str(m)+'.png'
+            imWv=plt.imshow(wvkTmp,cmap='jet',interpolation='bilinear',extent=(-self.N/2+1,self.N/2,-self.N/2+1,self.N/2))
+            plt.colorbar(imWv)
+            plt.title('K Space Density at Step = '+str(m))
+            plt.savefig(ofNamephi)
+            plt.clf()
 
 
 

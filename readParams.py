@@ -19,7 +19,7 @@ class params:
 
 
         self.p0 =(1.5E-3)*(1E-3)*(1.60218E-19)*(1E12)
-        self.timeSteps = 200
+        self.timeSteps = 128
         self.gR = 1
         self.gammaR = 1
         self.D = 1
@@ -65,6 +65,6 @@ class reducedParams(params):
         self.eta =  self.R / (self.L ** 2 * self.gammaC)
         self.p0Reduced =  self.p0 * self.L ** 2 / self.gammaC
         self.DReduced =  self.D / (self.L ** 2 * self.gammaC)
-        self.timeSteps =  self.timeSteps
+        #self.timeSteps =  self.timeSteps
         self.fractionTime = 500
-        self.gridNum = 100
+        self.gridNum = 2**10
